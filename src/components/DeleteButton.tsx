@@ -1,7 +1,9 @@
+import { useAuthContext } from "../contexts/authContext";
 import { useDeleteTask } from "../hooks/useTasks";
 
 function DeleteButton({ id }: { id: string }) {
-  const { mutate: deleteTask } = useDeleteTask();
+  const { user } = useAuthContext();
+  const { mutate: deleteTask } = useDeleteTask(user?.id);
   const hadleDelete = () => {
     deleteTask(id);
   };

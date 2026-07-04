@@ -1,4 +1,14 @@
+import { Link } from "react-router";
+import useAuth from "../hooks/useAuth";
+import { useAuthContext } from "../contexts/authContext";
+
 function Navbar() {
+  const { isPending, useSignOut } = useAuth();
+  const { user } = useAuthContext();
+  console.log(user);
+  const logout = async () => {
+    await useSignOut();
+  };
   return (
     <header className="border border-line md:mb-10 mb-4 shadow-soft backdrop-blur-sm p-4 sm:p-6">
       <div className="flex justify-between items-center">
@@ -29,9 +39,24 @@ function Navbar() {
           <button className="text-ink cursor-pointer bg-surface border border-line rounded-full px-4 py-1.5 text-sm font-medium">
             Profile
           </button>
-          <button className="text-white cursor-pointer bg-ink rounded-full text-sm font-medium px-4 py-1.5">
-            Logout
-          </button>
+          {user && (
+            <button
+              type="button"
+              disabled={isPending}
+              onClick={logout}
+              className="text-white cursor-pointer bg-ink rounded-full text-sm font-medium px-4 py-1.5"
+            >
+              Logout
+            </button>
+          )}
+          {!user && (
+            <Link
+              to={"/login"}
+              className="text-white cursor-pointer bg-ink rounded-full text-sm font-medium px-4 py-1.5"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </header>

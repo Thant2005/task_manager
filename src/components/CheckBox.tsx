@@ -1,8 +1,10 @@
 import type React from "react";
 import { useToggleTask } from "../hooks/useTasks";
+import { useAuthContext } from "../contexts/authContext";
 
 function CheckBox({ id, isCheck }: { id: string; isCheck: boolean }) {
-  const { mutate: toogleTask, isPending } = useToggleTask();
+  const { user } = useAuthContext();
+  const { mutate: toogleTask, isPending } = useToggleTask(user?.id);
 
   return (
     <label>
