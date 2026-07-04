@@ -2,11 +2,12 @@ import type React from "react";
 import { useToggleTask } from "../hooks/useTasks";
 
 function CheckBox({ id, isCheck }: { id: string; isCheck: boolean }) {
-  const { mutate: toogleTask } = useToggleTask();
+  const { mutate: toogleTask, isPending } = useToggleTask();
 
   return (
     <label>
       <input
+        disabled={isPending}
         type="checkbox"
         checked={isCheck}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

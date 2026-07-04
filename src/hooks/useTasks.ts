@@ -6,6 +6,7 @@ import {
   getTasks,
   toggleTask,
 } from "../services/taskService";
+import type { Task } from "../types/task";
 
 const TASK_KEY: string[] = ["tasks"];
 const useTasks = () => {
@@ -35,7 +36,26 @@ const useToggleTask = () => {
       id: string;
       currentStatus: boolean;
     }) => toggleTask("tasks", id, currentStatus),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: TASK_KEY }),
+    onMutate: async (newTask) => {
+      await queryClient.cancelQueries({ queryKey: TASK_KEY });
+      const prevTesk = queryClient.getQueryData(TASK_KEY);
+      queryClient.setQueryData<Task[]>(
+        TASK_KEY,
+        (old) =>
+          old?.map((task) =>
+            task.id === newTask.id
+              ? { ...task, is_completed: newTask.currentStatus }
+              : task,
+          ) ?? [],
+      );
+      return { prevTesk };
+    },
+    onError: (_err, _newTask, context) => {
+      queryClient.setQueryData(TASK_KEY, context?.prevTesk);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: TASK_KEY });
+    },
   });
 };
 const useDeleteTask = () => {
