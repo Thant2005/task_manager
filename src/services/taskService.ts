@@ -1,14 +1,14 @@
 import { supabase } from "../lib/supabaseClient";
 import type { Task } from "../types/task";
 
-const getTasks = async (table: string, user_id: string): Promise<Task[]> => {
+const getTasks = async (table: string): Promise<Task[]> => {
   const { data, error } = await supabase
     .from(table)
     .select("*")
-    .eq("user_id", user_id)
+
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
-  return data;
+  return data ?? [];
 };
 
 const addTask = async (
@@ -21,6 +21,7 @@ const addTask = async (
     .select()
     .single();
   if (error) throw new Error(error.message);
+  if (!data) throw new Error("Failed to add task:No data return");
   return data;
 };
 
@@ -28,32 +29,28 @@ const toggleTask = async (
   table: string,
   id: string,
   currentStatus: boolean,
-  userId: string,
 ): Promise<Task> => {
   const { data, error } = await supabase
     .from(table)
     .update({ is_completed: currentStatus })
     .eq("id", id)
-    .eq("user_id", userId)
     .select()
     .single();
   if (error) throw new Error(error.message);
+  if (!data) throw new Error("Failed to updated task:No data return");
   return data;
 };
 
-const deleteTask = async (table: string, id: string, userId: string) => {
-  const { error } = await supabase
-    .from(table)
-    .delete()
-    .eq("id", id)
-    .eq("user_id", userId);
+const deleteTask = async (table: string, id: string) => {
+  const { error } = await supabase.from(table).delete().eq("id", id);
+
   if (error) throw new Error(error.message);
 };
-const clearCompleted = async (table: string, userId: string) => {
+const clearCompleted = async (table: string) => {
   const { error } = await supabase
     .from(table)
     .delete()
-    .eq("user_id", userId)
+
     .eq("is_completed", true);
   if (error) throw new Error(error.message);
 };

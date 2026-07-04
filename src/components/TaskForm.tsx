@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useAddTask } from "../hooks/useTasks";
-import { useAuthContext } from "../contexts/authContext";
 
 function TaskForm() {
   const [title, setTitle] = useState("");
-  const { user } = useAuthContext();
-  const { isPending, mutate: addTask } = useAddTask(user?.id);
+
+  const { isPending, mutate: addTask } = useAddTask();
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();

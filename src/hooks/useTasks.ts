@@ -7,28 +7,25 @@ import {
   toggleTask,
 } from "../services/taskService";
 import type { Task } from "../types/task";
-type userId = string | undefined;
 
-const useTasks = (userId: userId) => {
+const useTasks = () => {
   const { data, error, isLoading } = useQuery({
-    queryKey: ["tasks", userId],
-    queryFn: () => getTasks("tasks", userId!),
-    enabled: !!userId,
+    queryKey: ["tasks"],
+    queryFn: () => getTasks("tasks"),
   });
 
   return { data, error, isLoading };
 };
 
-const useAddTask = (userId: userId) => {
+const useAddTask = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (title: string) =>
       addTask("tasks", { title, is_completed: false }),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["tasks", userId] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
 };
-const useToggleTask = (userId: userId) => {
+const useToggleTask = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
@@ -37,12 +34,12 @@ const useToggleTask = (userId: userId) => {
     }: {
       id: string;
       currentStatus: boolean;
-    }) => toggleTask("tasks", id, currentStatus, userId!),
+    }) => toggleTask("tasks", id, currentStatus),
     onMutate: async (newTask) => {
-      await queryClient.cancelQueries({ queryKey: ["tasks", userId] });
-      const prevTesk = queryClient.getQueryData(["tasks", userId]);
+      await queryClient.cancelQueries({ queryKey: ["tasks"] });
+      const prevTesk = queryClient.getQueryData(["tasks"]);
       queryClient.setQueryData<Task[]>(
-        ["tasks", userId],
+        ["tasks"],
         (old) =>
           old?.map((task) =>
             task.id === newTask.id
@@ -53,27 +50,25 @@ const useToggleTask = (userId: userId) => {
       return { prevTesk };
     },
     onError: (_err, _newTask, context) => {
-      queryClient.setQueryData(["tasks", userId], context?.prevTesk);
+      queryClient.setQueryData(["tasks"], context?.prevTesk);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks", userId] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 };
-const useDeleteTask = (userId: userId) => {
+const useDeleteTask = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => deleteTask("tasks", id, userId!),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["tasks", userId] }),
+    mutationFn: (id: string) => deleteTask("tasks", id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
 };
-const useCompleted = (userId: userId) => {
+const useCompleted = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => clearCompleted("tasks", userId!),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["tasks", userId] }),
+    mutationFn: () => clearCompleted("tasks"),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
 };
 export { useTasks, useAddTask, useToggleTask, useDeleteTask, useCompleted };

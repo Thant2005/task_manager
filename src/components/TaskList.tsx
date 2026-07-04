@@ -2,11 +2,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTasks } from "../hooks/useTasks";
 
 import Task from "./Task";
-import { useAuthContext } from "../contexts/authContext";
 
 export default function TaskList() {
-  const { user } = useAuthContext();
-  const { data: tasks, isLoading } = useTasks(user?.id);
+  const { data: tasks, isLoading } = useTasks();
   return (
     <>
       <div

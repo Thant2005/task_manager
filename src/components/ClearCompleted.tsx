@@ -1,9 +1,7 @@
-import { useAuthContext } from "../contexts/authContext";
 import { useCompleted } from "../hooks/useTasks";
 
 function ClearCompleted() {
-  const { user } = useAuthContext();
-  const { mutate } = useCompleted(user?.id);
+  const { mutate } = useCompleted();
   return (
     <div className="md:mt-6 mt-3 flex justify-end">
       <button
