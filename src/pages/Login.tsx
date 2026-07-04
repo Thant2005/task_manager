@@ -18,14 +18,16 @@ function Login() {
   };
   console.log("login screen rendering");
   return (
-    <div className="mx-auto bg-white shadow-xl max-w-2xl rounded-lg  px-13 py-6">
-      <div className="mb-4">
-        <h2 className="text-center text-ink text-3xl font-bold">Sign In</h2>
+    <div className="mx-auto bg-white shadow-xl max-w-2xl rounded-lg  md:px-13 px-4 md:py-6 py-3">
+      <div className="md:mb-4 mb-2">
+        <h2 className="text-center text-ink md:text-3xl text-lg font-bold">
+          Sign In
+        </h2>
         <p className="text-sm font-semibold text-zinc-500 text-center">
           Acess to your account with email or google.
         </p>
       </div>
-      <form className="space-y-5" onSubmit={handleSubmit}>
+      <form className="md:space-y-5 space-y-3" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="" className="block text-lg text-ink font-bold  ">
             Email

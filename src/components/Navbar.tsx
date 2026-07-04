@@ -35,16 +35,13 @@ function Navbar() {
             </p>
           </div>
         </div>
-        <div className="space-x-2 hidden md:block">
-          <button className="text-ink cursor-pointer bg-surface border border-line rounded-full px-4 py-1.5 text-sm font-medium">
-            Profile
-          </button>
+        <div className="space-x-2 ">
           {user && (
             <button
               type="button"
               disabled={isPending}
               onClick={logout}
-              className="text-white cursor-pointer bg-ink rounded-full text-sm font-medium px-4 py-1.5"
+              className="text-white cursor-pointer bg-ink rounded-full md:text-sm text-xs font-medium md:px-4 px-2 md:py-1.5 py-1"
             >
               Logout
             </button>
