@@ -40,7 +40,7 @@ export default function TaskList() {
             </AnimatePresence>
           </ul>
         ) : (
-          <p className="text-center text-lg my-4 text-zinc-600">
+          <p className="text-center text-lg my-3 text-zinc-600">
             No Tasks Found
           </p>
         )}
